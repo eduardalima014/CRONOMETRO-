@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro duda</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(5, 5, 17);
+            font-family: 'Arial', sans-serif;
+            color: #df5d99;
+        }
+
+        .timer {
+            font-size: 5rem;
+            background: #25394d;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(197, 15, 15, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #ecf0f1;
+            background-color: #25394d;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #295d91;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="controls">
+        <button id="start">Iniciar</button>
+        <button id="pause">Pausar</button>
+        <button id="reset">Reiniciar</button>
+    </div>
+
+    <script>
+        let startTime, updatedTime, difference, tInterval, running = false;
+        let hours = 0, minutes = 0, seconds = 0;
+
+        function updateTimer() {
+            if (running) {
+                updatedTime = new Date().getTime();
+                difference = updatedTime - startTime;
+                hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                minutes = Math.floor((difference / (1000 * 60)) % 60);
+                seconds = Math.floor((difference / 1000) % 60);
+
+                hours = (hours < 10) ? '0' + hours : hours;
+                minutes = (minutes < 10) ? '0' + minutes : minutes;
+                seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+                document.getElementById('timer').textContent = hours + ':' + minutes + ':' + seconds;
+            }
+        }
+
+        document.getElementById('start').addEventListener('click', () => {
+            if (!running) {
+                running = true;
+                startTime = new Date().getTime();
+                tInterval = setInterval(updateTimer, 1000);
+            }
+        });
+
+        document.getElementById('pause').addEventListener('click', () => {
+            running = false;
+            clearInterval(tInterval);
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            running = false;
+            clearInterval(tInterval);
+            hours = minutes = seconds = 0;
+            document.getElementById('timer').textContent = '00:00:00';
+        });
+    </script>
+</body>
+</html>
